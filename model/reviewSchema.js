@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 // Review Schema
 const reviewSchema = new mongoose.Schema({
     user: {
@@ -13,30 +15,19 @@ const reviewSchema = new mongoose.Schema({
     rating: {
         type: Number,
         required: true,
-        min: 1,
-        max: 5,
+        enum: {
+            values: [1, 2, 3, 4, 5],
+            message: 'Rating must be between 1 and 5',
+        },
     },
-    review: {
+    reviewText: {
         type: String,
-        required: true,
-        minlength: 15,
-        maxlength: 200,
+        required: [true, 'Review content is required'],
+        minlength: [15, 'Review must be at least 15 characters long'],
+        maxlength: [200, 'Review cannot exceed 200 characters'],
     },
 }, {
     timestamps: true,
 });
-
-// // Ensure each user can only review each car once
-// reviewSchema.index({ user: 1, car: 1 }, { unique: true });
-
-// // Optional: Add indexes for faster querying by user or car
-// reviewSchema.index({ user: 1 });
-// reviewSchema.index({ car: 1 });
-
-// // Optional: Pre-save hook to sanitize review content
-// reviewSchema.pre('save', function(next) {
-//     this.review = this.review.trim();
-//     next();
-// });
 
 export const Review = mongoose.model("Review", reviewSchema);

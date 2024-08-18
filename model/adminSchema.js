@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema({
-    name: {
+    adminName: {
         type: String,
         required: true,
     },
@@ -13,7 +13,7 @@ const adminSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    },
+    }
 }, {
     timestamps: true,
 });

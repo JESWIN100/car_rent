@@ -2,9 +2,10 @@ import {User} from '../model/userModel.js'
 import bcrypt  from 'bcrypt'
 import { generateUserToken } from '../utils/generateToken.js';
 import { validateUserLogin, validateUserRegistration } from '../validation/userJoiValidation.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
 
-export const userCreate=async(req,res,next)=>{
+export const userCreate=asyncHandler(async(req,res,next)=>{
 
 
     //validation fro joi
@@ -35,10 +36,9 @@ const token=generateUserToken(email)
 res.cookie('token',token)
 
             res.json({ success: true, message: "user created successfully" });
-    } 
+    } )
 
-
-export const userLogin=async(req,res,next)=>{
+export const userLogin=asyncHandler(async(req,res,next)=>{
   
 
     // Validate user input
@@ -66,9 +66,9 @@ export const userLogin=async(req,res,next)=>{
   res.json({success:true,message:'user logged in successfully'})
 
 
-    } 
+    } )
     
- export const userProfile=async(req,res,next)=>{
+ export const userProfile=asyncHandler(async(req,res,next)=>{
   
 
         const {id}=req.params
@@ -78,10 +78,9 @@ export const userLogin=async(req,res,next)=>{
       res.json({success:true,message:'user data fetched',data:userData})
     
     
-        } 
+        } )
          
-
-  export const checkUser=async(req,res,next)=>{
+  export const checkUser=asyncHandler(async(req,res,next)=>{
   
 
             const user=req.user;
@@ -92,5 +91,12 @@ export const userLogin=async(req,res,next)=>{
           res.json({success:true,message:'user is authenticated'})
         
         
-            } 
-        
+            } )
+
+export const userLogout=asyncHandler(async(req,res,next)=>{
+
+                 res.clearCookie("token")
+                 res.json({success:true,message:'user logged out successfully'})
+                 
+            
+                } )

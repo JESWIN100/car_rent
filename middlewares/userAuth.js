@@ -4,7 +4,7 @@ export const authUser=(req,res,next)=>{
 
     // console.log(req.cookies,"cookies===>");
     const {token}=req.cookies;
-    // console.log("token====>",token);
+    console.log("token====>",token);
     
     if(!token){
         return res.status(401).json({success:false,message:"User not authenticated"})
@@ -15,6 +15,6 @@ export const authUser=(req,res,next)=>{
                 return res.status(400).json({success:false,message:"Invalid token"})
                 }
  req.user=tokenVerifyed
-         
+          
                 next();
 } 

@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 // Booking Schema
 const bookingSchema = new mongoose.Schema({
     user: {
@@ -15,13 +17,21 @@ const bookingSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: function(value) {
-                return value < this.endDate;
+                return this.endDate ? value < this.endDate : true;
             },
             message: "Start date must be before end date",
         },
     },
+    startTime: {
+        type: String, // e.g., 'HH:MM'
+        required: true,
+    },
     endDate: {
         type: Date,
+        required: true,
+    },
+    endTime: {
+        type: String, // e.g., 'HH:MM'
         required: true,
     },
     totalPrice: {
@@ -31,6 +41,23 @@ const bookingSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['Pending', 'Confirmed', 'Cancelled', 'Completed'],
+        default: 'Pending',
+    },
+    pickupLocation: {
+        type: String,
+        required: true,
+    },
+    dropoffLocation: {
+        type: String,
+        required: true,
+    },
+    licenceNumber:{
+        type:String,
+        required:true
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['Paid', 'Pending', 'Failed'],
         default: 'Pending',
     },
 }, {
