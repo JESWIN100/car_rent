@@ -90,10 +90,10 @@ export const adminProfile=asyncHandler(async(req,res,next)=>{
 
         const admin=req.admin;
         if(!admin){
-            return res.status(401).json({success:false,message:'user not authenticated'})
+            return res.status(401).json({success:false,message:'admin not authenticated'})
             }
         
-      res.json({success:true,message:'user is authenticated'})
+      res.json({success:true,message:'admin is authenticated'})
     
     
 } )

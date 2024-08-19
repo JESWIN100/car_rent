@@ -17,6 +17,6 @@ import Joi from 'joi';
         return helpers.message('Start date must be before end date');
     }
     return value;
-}, 'Custom validation');
+}, 'Custom validation'); 
 
 export default bookingSchema;
