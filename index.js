@@ -16,7 +16,10 @@ const port = process.env.PORT
 connectDB();
 
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials:true,
+})); // Enable CORS
 app.use(bodyParser.json()); // Parse JSON bodies
 
 

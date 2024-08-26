@@ -47,7 +47,6 @@ export const userLogin=asyncHandler(async(req,res,next)=>{
         return res.status(402).json({ success: false, message: error.details[0].message });
     }
  
-
         const {email,password}=req.body;
         
 
@@ -95,7 +94,7 @@ export const userLogin=asyncHandler(async(req,res,next)=>{
 
 export const userLogout=asyncHandler(async(req,res,next)=>{
 
-                 res.clearCookie("token")
+                res.clearCookie("token")
                  res.json({success:true,message:'user logged out successfully'})
                  
             
