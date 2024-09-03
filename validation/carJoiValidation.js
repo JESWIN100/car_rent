@@ -13,6 +13,8 @@ export const createCarsValidation = (data) => {
         color: Joi.string().required(),
         registrationNumber: Joi.string().required(),
         availability: Joi.boolean().required(),
+        review:Joi.string(),
+        description:Joi.string().required()
     });
 
     return schema.validate(data);

@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 // Booking Schema
 const bookingSchema = new mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        
     },
-    car: {
+    carId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Car',
         required: true,
@@ -34,10 +34,8 @@ const bookingSchema = new mongoose.Schema({
         type: String, // e.g., 'HH:MM'
         required: true,
     },
-    totalPrice: {
-        type: Number,
-        required: true,
-    },
+
+   
     status: {
         type: String,
         enum: ['Pending', 'Confirmed', 'Cancelled', 'Completed'],
@@ -51,10 +49,8 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    licenceNumber:{
-        type:String,
-        required:true
-    },
+   
+   
     paymentStatus: {
         type: String,
         enum: ['Paid', 'Pending', 'Failed'],

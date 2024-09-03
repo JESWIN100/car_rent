@@ -6,6 +6,6 @@ export const locationSchema = Joi.object({
     address: Joi.string().required(),
     city: Joi.string().required(),
     state: Joi.string().required(),
-    postalCode: Joi.string().required(),
+    postalCode: Joi.string().pattern(/^[1-9][0-9]{5}$/).message('Invalid PIN code!'),
     country: Joi.string().required(),
 });

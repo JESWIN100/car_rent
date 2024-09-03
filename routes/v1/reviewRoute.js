@@ -8,7 +8,7 @@ import { authUser } from '../../middlewares/userAuth.js';
 const router = express.Router();
 
 // Route to create a review
-router.post('/createReviews',authUser, createReview);
+router.post("/cars/:carId/reviews",authUser, createReview);
 router.get("/getReview",authUser,getCarReview)
 router.get("/getReviewById/:id",authUser,getCarReviewById)
 router.put("/updateCarReview/:id",authUser,updateCarReview)
