@@ -26,7 +26,9 @@ app.use(bodyParser.json()); // Parse JSON bodies
 app.use(logger('dev'));
 // Default route
 
-
+app.get("/",(req,res)=>{
+    res.send("Welcome to the API")
+})
 // API routes
 app.use('/api', apiRouter);
 
