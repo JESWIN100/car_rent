@@ -17,7 +17,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: "https://morentrentalcars-6x6vaemrs-jeswins-projects-f40474fd.vercel.app",
+    origin: "https://morentcarrenatl-ndfzdp3nm-jeswins-projects-f40474fd.vercel.app",
     credentials:true,
 })); // Enable CORS
 app.use(bodyParser.json()); // Parse JSON bodies
