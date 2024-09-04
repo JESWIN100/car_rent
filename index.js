@@ -17,7 +17,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: "https://morent-jeswins-projects-f40474fd.vercel.app",
+    origin: "https://morent-lyart.vercel.app",
     credentials:true,
 })); // Enable CORS
 app.use(bodyParser.json()); // Parse JSON bodies
