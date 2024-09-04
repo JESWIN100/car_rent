@@ -11,8 +11,8 @@ export const MakePayment = asyncHandler(async (req, res, next) => {
     price_data: {
         currency: 'inr', // Currency set to Indian Rupees
         product_data: {
-            name: carDetails.brand, // The brand of the car (e.g., "BMW")
-            description: carDetails.model, // The model of the car (e.g., "c3")
+            name: `${carDetails.brand} ${carDetails.model}`, // The brand of the car (e.g., "BMW")
+            description:`Booking: ${carDetails.availability}`, // The model of the car (e.g., "c3")
         },
         unit_amount: Math.round(totalAmount * 100), // The price is multiplied by 100 to convert to the smallest currency unit (e.g., paise for INR)
     },

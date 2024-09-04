@@ -12,7 +12,7 @@ export const createBooking = asyncHandler(async (req, res, next) => {
             return res.status(400).json({ success: false, message: error.details[0].message });
         }
 
-        const { carId,userId, startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation } = req.body;
+        const { carId, startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation } = req.body;
 
         // const foundUser = await User.findById(userId);
         // if (!foundUser) {
@@ -23,12 +23,12 @@ export const createBooking = asyncHandler(async (req, res, next) => {
             return res.status(400).json({ success: false, message: "Booking already exists" });
         }
 
-        const foundCar = await Car.findById(carId); 
-        if (!foundCar) {
-            return res.status(404).json({ success: false, message: "Car not found" });
-        }
+        // const foundCar = await Car.findById(carId); 
+        // if (!foundCar) {
+        //     return res.status(404).json({ success: false, message: "Car not found" });
+        // }
 
-        const newBooking = new Booking({  carId,userId,startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation });
+        const newBooking = new Booking({  carId,startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation });
         await newBooking.save();
 
         res.status(201).json({ success: true, message: "Booking created successfully", data: newBooking });
@@ -37,14 +37,14 @@ export const createBooking = asyncHandler(async (req, res, next) => {
 
 export const getBooking = asyncHandler(async (req, res, next) => {
    
-        const bookings = await Booking.find().populate('userId').populate("carId")
+        const bookings = await Booking.find().populate("carId")
         res.json({ success: true, message: 'Booking list fetched', data: bookings });
     })
 
 export const getBookingById = asyncHandler(async (req, res, next) => {
     
         const { id } = req.params;
-        const carBooking = await Booking.findById(id).populate('userId').populate("carId")
+        const carBooking = await Booking.findById(id).populate("carId")
         
         if (!carBooking) {
             return res.status(404).json({ success: false, message: 'Booking not found' });
