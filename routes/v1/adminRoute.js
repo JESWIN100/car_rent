@@ -19,7 +19,7 @@ const router = express.Router();
 // Admin creation route
 router.post("/create", AdminCreate);
 router.post("/login",adminLogin);
-router.use("/",verifyAdminToken)
+router.use(verifyAdminToken);
 router.get("/adminById/:id",adminProfile)
 router.post("/logout",AdminLogout)
 

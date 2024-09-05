@@ -17,7 +17,8 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: "https://morentcarrenatl-ndfzdp3nm-jeswins-projects-f40474fd.vercel.app",
+    origin: "http://localhost:5173",
+    //https://morentcarrenatl-ndfzdp3nm-jeswins-projects-f40474fd.vercel.app
     credentials:true,
 })); // Enable CORS
 app.use(bodyParser.json()); // Parse JSON bodies
