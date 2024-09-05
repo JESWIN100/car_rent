@@ -61,12 +61,17 @@ export const userLogin=asyncHandler(async(req,res,next)=>{
                 }
 
  const token=generateUserToken(email)
- res.cookie('token',token)
+ const cookieOptions = {
+    sameSite: 'None',
+    secure: true,
+    httpOnly: true,
+};
+ res.cookie('token',token,cookieOptions)
   res.json({success:true,message:'user logged in successfully'})
 
 
     } )
-    
+     
  export const userProfile=asyncHandler(async(req,res,next)=>{
   
 
