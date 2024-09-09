@@ -10,6 +10,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { adminCreateSchema, adminLoginSchema } from "../validation/adminJoiSchema.js";
 import { createCarsValidation } from "../validation/carJoiValidation.js";
 import bookingSchema from "../validation/bookingJoiValidation.js";
+import { cloudinaryInstance } from "../config/cloudinaryConfig.js";
+import { Driver } from "../model/driverDetailsSchema.js";
 
 export const AdminCreate = asyncHandler(async (req, res, next) => {
    
@@ -182,38 +184,85 @@ export const delteUser = asyncHandler(async (req, res, next) => {
     } )
 
 
+export const getTotalUsers = async (req, res) => {
+        try {
+          const totalCars = await User.countDocuments(); // Counts total cars in the collection
+          res.status(200).json({ total: totalCars });
+        } catch (error) {
+          res.status(500).json({ message: "Error fetching total cars" });
+        }
+      };
+      
+
+
+
+
+
 // Car Management Routes
-
 export const adminCreateCar = asyncHandler(async (req, res, next) => {
+    // Validate request body
+    console.log(req.body); // Log the request body
+    const { error } = createCarsValidation(req.body);
+    if (error) return res.status(400).json({ success: false, message: error.details[0].message });
+
+    const { description, brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability } = req.body;
+
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: "Please upload an image" });
+    }
     
-        // Validate request body
-        const { error } = createCarsValidation(req.body);
-        if (error) return res.status(400).json({ success: false, message: error.details[0].message });
+    const existingCar = await Car.findOne({ model: model });
+    if (existingCar) {
+        return res.status(400).json({ success: false, message: "Car already exists" });
+    }
+    
+    // Upload an image
+    const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
 
-        const { brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability } = req.body;
-
-        if (!req.file) {
-            return res.status(400).json({ success: false, message: "Please upload an image" });
-        }
-        
-        const existingCar = await Car.findOne({ model: model });
-        if (existingCar) {
-            return res.status(400).json({ success: false, message: "Car already exists" });
-        }
-        
-        // Upload an image
-        const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
-
-        const newCar = new Car({ brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability });
-        if (uploadResult?.url) {
-            newCar.image = uploadResult.url;
-        }
-        
-        await newCar.save();
-        res.json({ success: true, message: 'New car created successfully!', data: newCar });
-    } )
+    const newCar = new Car({description, brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability });
+    if (uploadResult?.url) {
+        newCar.image = uploadResult.url;
+    }
+    
+    await newCar.save();
+    res.json({ success: true, message: 'New car created successfully!', data: newCar });
+});
 
 
+ export const updateCar = asyncHandler(async (req, res, next) => {
+         const { id } = req.params;
+     
+         // Handle image update if a new file is provided
+         let updatedData = { ...req.body };
+         if (req.file) {
+             const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
+             if (uploadResult?.url) {
+                 updatedData.image = uploadResult.url;
+             }
+         }
+     
+         // Update the car using findByIdAndUpdate
+         const updatedCar = await Car.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+     
+         if (!updatedCar) {
+             return res.status(404).json({ success: false, message: "Car not found" });
+         }
+     
+         res.json({ success: true, message: 'Car updated successfully!', data: updatedCar });
+     });
+     
+ 
+ export const deleteCar = asyncHandler(async (req, res, next) => {
+    
+         const { id } = req.params;
+         const deletedCar = await Car.findByIdAndDelete(id);
+ 
+         if (!deletedCar) {
+             return res.status(404).json({ success: false, message: 'Car not found' });
+         }
+ 
+         res.json({ success: true, message: 'Car deleted successfully!', data: deletedCar });
+     } )
 export const getAllCars = asyncHandler(async (req, res, next) => {
    
         const cars = await Car.find();
@@ -230,18 +279,30 @@ export const getAllCarsById = asyncHandler(async (req, res, next) => {
         res.json({ success: true, message: 'Car fetched successfully', data: car });
     })
 
+
 export const adminUpdateCar = asyncHandler(async (req, res, next) => {
    
-        const { id } = req.params;
-        const { brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability } = req.body;
-        const updatedCar = await Car.findByIdAndUpdate(id, {
-            brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability
-        }, { new: true });
-        if (!updatedCar) {
-            return res.status(404).json({ success: false, message: 'Car not found' });
+    const { id } = req.params;
+    
+        // Handle image update if a new file is provided
+        let updatedData = { ...req.body };
+        if (req.file) {
+            const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
+            if (uploadResult?.url) {
+                updatedData.image = uploadResult.url;
+            }
         }
-        res.json({ success: true, message: 'Car updated successfully', data: updatedCar });
-    })
+    
+        // Update the car using findByIdAndUpdate
+        const updatedCar = await Car.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+    
+        if (!updatedCar) {
+            return res.status(404).json({ success: false, message: "Car not found" });
+        }
+    
+        res.json({ success: true, message: 'Car updated successfully!', data: updatedCar });
+    });
+    
 
 export const adminDeleteCar = asyncHandler(async (req, res, next) => {
    
@@ -256,13 +317,24 @@ export const adminDeleteCar = asyncHandler(async (req, res, next) => {
     })
 
 
+export const getTotalCars = async (req, res) => {
+    try {
+      const totalCars = await Car.countDocuments(); // Counts total cars in the collection
+      res.status(200).json({ total: totalCars });
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching total cars" });
+    }
+  };
+  
+
+
+
 // Booking Management Routes
 export const getAllBookings = asyncHandler(async (req, res, next) => {
   
-        const bookings = await Booking.find().populate('user car');
-        res.json({ success: true, message: 'Bookings list fetched successfully', data: bookings });
-    })
-
+    const bookings = await Booking.find().populate("carId")
+    res.json({ success: true, message: 'Booking list fetched', data: bookings });
+})
 export const getBookingId = asyncHandler(async (req, res, next) => {
   
         const { id } = req.params;
@@ -303,13 +375,41 @@ export const BookingDelete = asyncHandler(async (req, res, next) => {
         res.json({ success: true, message: 'Booking deleted successfully', data: deletedBooking });
     } )
 
+    export const confirmBooking = asyncHandler(async (req, res, next) => {
+        const { bookingId } = req.params;
+      
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+          return res.status(404).json({ success: false, message: "Booking not found" });
+        }
+      
+        booking.status = 'Confirmed';
+        booking.confirmedAt = new Date();
+      
+        await booking.save();
+      
+        res.status(200).json({ success: true, message: "Booking confirmed", data: booking });
+      });
+
+
+      export const getTotalBooking = async (req, res) => {
+        try {
+          const totalCars = await Booking.countDocuments(); // Counts total cars in the collection
+          res.status(200).json({ total: totalCars });
+        } catch (error) {
+          res.status(500).json({ message: "Error fetching total cars" });
+        }
+      };
+      
+
+
 
 // Review Management Routes
 
 export const adminGetCarReviews = asyncHandler(async (req, res) => {
-  const reviewList = await Review.find();
-  res.json({ success: true, message: 'Review list fetched', data: reviewList });
-});
+    const reviewList = await Review.find().populate('user').populate('car')
+    res.json({ success: true, message: 'Review list fetched', data: reviewList })
+  })
 
 
 export const adminGetCarReviewById = asyncHandler(async (req, res, next) => {
@@ -365,4 +465,21 @@ export const adminDeleteCarReview = asyncHandler(async (req, res, next) => {
       res.json({ success: true, message: 'Reviews fetched successfully', data: reviews });
     })
   
- 
+
+  export const getDriverListbyAdmin = asyncHandler(async (req, res, next) => {
+    
+        const carList = await Driver.find().populate('user')
+            res.json({ success: true, message: 'Car list fetched', data: carList });
+        })
+    
+
+        
+export const getTotalReview = async (req, res) => {
+    try {
+      const totalReviews = await Review.countDocuments(); // Counts total cars in the collection
+      res.status(200).json({ total: totalReviews });
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching total review" });
+    }
+  };
+  

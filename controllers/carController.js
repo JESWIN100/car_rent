@@ -14,8 +14,6 @@ export const getCarListById = asyncHandler(async (req, res, next) => {
    
         const { id } = req.params;
         const car = await Car.findById(id)
-        .populate('bookings') // Populate the bookings field
-        .exec();
         
         if (!car) {
             return res.status(404).json({ success: false, message: 'Car not found' });

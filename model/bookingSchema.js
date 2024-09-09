@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 // Booking Schema
 const bookingSchema = new mongoose.Schema({
-    
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     carId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Car',
@@ -45,8 +49,11 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-   
-   
+    createdAt: { type: Date, default: Date.now },
+    confirmedAt: { type: Date },
+    cancelledAt: { type: Date },
+    completedAt: { type: Date },
+    
     paymentStatus: {
         type: String,
         enum: ['Paid', 'Pending', 'Failed'],

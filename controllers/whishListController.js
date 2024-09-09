@@ -79,3 +79,55 @@ export const deleteWishlistById = asyncHandler(async (req, res, next) => {
       res.json({ success: true, message: 'Wishlist deleted successfully' });
     } )
   
+
+
+
+
+    export const createWhish = asyncHandler(async (req, res, next) => {
+  
+
+      const { userId, carId } = req.body;
+
+
+          let wishlist = await Wishlist.findOne({ userId });
+          if (!wishlist) {
+              wishlist = new Wishlist({ userId, cars: [carId] });
+          } else {
+              if (!wishlist.cars.includes(carId)) {
+                  wishlist.cars.push(carId);
+              }
+          }
+          await wishlist.save();
+          res.status(200).json(wishlist);
+      
+
+    } )
+
+
+
+    export const reomveWhish=asyncHandler(async(req,res,next)=>{
+      const { userId, carId } = req.body;
+
+        let wishlist = await Wishlist.findOne({ userId });
+        if (wishlist) {
+            wishlist.cars = wishlist.cars.filter(item => item != carId);
+            await wishlist.save();
+            res.status(200).json(wishlist);
+        } else {
+            res.status(404).json({ message: 'Wishlist not found' });
+        }
+    
+    })
+
+
+    export const getWhishList=asyncHandler(async(req,res,next)=>{
+      const { userId } = req.params;
+   
+          const wishlist = await Wishlist.findOne({ userId }).populate('cars');
+          if (wishlist) {
+              res.status(200).json(wishlist);
+          } else {
+              res.status(404).json({ message: 'Wishlist not found' });
+          }
+      
+    })

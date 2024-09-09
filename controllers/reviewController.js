@@ -47,7 +47,7 @@ export const createReview = asyncHandler(async (req, res, next) => {
 // Get all reviews
 export const getCarReview = asyncHandler(async (req, res, next) => {
   
-    const reviewList = await Review.find().populate('user').populate('car')
+    const reviewList = await Review.find().populate("user").populate('car')
     res.json({ success: true, message: 'Review list fetched', data: reviewList })
   })
 
@@ -59,13 +59,13 @@ export const getCarReviewById = asyncHandler(async (req, res, next) => {
   // const { carId } = req.params;
   const carId = req.params.id;
   // Check if car exists
-  const carExists = await Car.findById(carId);
+  const carExists = await Car.findById(carId)
   if (!carExists) {
     return res.status(404).json({ success: false, message: 'Car not found' });
   }
 
   // Get reviews for the car
-  const reviews = await Review.find({ car: carId }).populate('user').populate('car');
+  const reviews = await Review.find({ car: carId }).populate("user").populate('car')
 
   res.json({ success: true, message: 'Reviews fetched successfully', data: reviews });
 });
@@ -112,3 +112,17 @@ export const deleteCarReview = asyncHandler(async (req, res, next) => {
 
     res.json({ success: true, message: 'Review deleted successfully!', data: deleteCarReview });
   } )
+
+
+
+  export const getReviewById = async (req, res, next) => {
+  
+    const { id } = req.params;
+    const reviewById = await Review.findById(id).populate('user').populate('car');
+
+    if (!reviewById) {
+      return res.status(404).json({ success: false, message: 'Review not found' });
+    }
+
+    res.json({ success: true, message: 'Review fetched successfully', data: reviewById });
+  } 

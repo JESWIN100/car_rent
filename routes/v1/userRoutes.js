@@ -8,7 +8,7 @@ const router = express.Router();
 // Use asyncHandler to wrap the controller functions
 router.post('/create', asyncHandler(userCreate));
 router.post('/login', asyncHandler(userLogin));
-router.get('/profile/:id', authUser, asyncHandler(userProfile));
+router.get('/profile', authUser, asyncHandler(userProfile));
 router.post("/logout",authUser,asyncHandler(userLogout))
 
 router.get("/check-user",authUser,(checkUser))

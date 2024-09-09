@@ -54,3 +54,11 @@ export const deleteDriver = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({ success: true, message: "Driver deleted successfully" });
 });
+
+
+
+export const getDriverList = asyncHandler(async (req, res, next) => {
+    
+    const carList = await Driver.find().populate('user')
+        res.json({ success: true, message: 'Car list fetched', data: carList });
+    })

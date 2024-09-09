@@ -38,6 +38,7 @@ res.cookie('token',token)
             res.json({ success: true, message: "user created successfully" });
     } )
 
+
 export const userLogin=asyncHandler(async(req,res,next)=>{
   
 
@@ -75,8 +76,8 @@ export const userLogin=asyncHandler(async(req,res,next)=>{
  export const userProfile=asyncHandler(async(req,res,next)=>{
   
 
-        const {id}=req.params
-        const userData=await User.findById(id).select("-password")
+        const user=req.user
+        const userData=await User.findOne({email:user.email}).select("-password")
 
         
       res.json({success:true,message:'user data fetched',data:userData})

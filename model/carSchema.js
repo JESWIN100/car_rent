@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const carSchema = new mongoose.Schema({
-  bookings: [{ // Use array to support multiple bookings
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Booking',
-  }],
+  // bookings: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Booking',
+  // },
   review: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Review',
@@ -24,7 +24,7 @@ const carSchema = new mongoose.Schema({
   image: {
     type: [String], // Updated to an array of strings to support multiple image URLs
     required: true,
-    // default: ["https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.avif"],
+
   },
   pricePerDay: {
     type: Number,
@@ -64,11 +64,6 @@ const carSchema = new mongoose.Schema({
     type:String,
     required:true
     },
-  
-  admin: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admin',
-  },
 
 }, {
   timestamps: true,
