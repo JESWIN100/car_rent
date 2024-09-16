@@ -8,6 +8,6 @@ import { v2 as cloudinary } from 'cloudinary';
         api_secret: process.env.CLOUD_API_SECRET
     });
 
-  export   const cloudinaryInstance=cloudinary
+  export  const cloudinaryInstance=cloudinary
    
      

@@ -21,10 +21,11 @@ export const createBooking = asyncHandler(async (req, res, next) => {
         // if (!foundUser) {
         //     return res.status(404).json({ success: false, message: "User not found" });
         // }
-        const existingBooking = await Booking.findOne({startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation,status: 'Pending' });
+        const existingBooking = await Booking.findOne({startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation,status: 'Pending',paymentStatus: 'pending' });
         if (existingBooking) {
             return res.status(400).json({ success: false, message: "Booking already exists" });
         }
+       
 
         // const foundCar = await Car.findById(carId); 
         // if (!foundCar) {
@@ -34,14 +35,17 @@ export const createBooking = asyncHandler(async (req, res, next) => {
         const newBooking = new Booking({ userId, carId,startTime, startDate, endDate,endTime,pickupLocation,dropoffLocation });
         await newBooking.save();
 
+
+
+        
         res.status(201).json({ success: true, message: "Booking created successfully", data: newBooking });
     } )
 
 
 export const getBooking = asyncHandler(async (req, res, next) => {
    
-        const bookings = await Booking.find().populate("carId").populate("userId")
-        res.json({ success: true, message: 'Booking list fetched', data: bookings });
+  const bookings = await Booking.find().populate("carId")
+  res.json({ success: true, message: 'Booking list fetched', data: bookings });;
     })
 
 export const getBookingById = asyncHandler(async (req, res, next) => {
@@ -131,7 +135,7 @@ export const cancelBooking = asyncHandler(async (req, res, next) => {
 export const confirmBooking = asyncHandler(async (req, res, next) => {
   const { bookingId } = req.params;
 
-  const booking = await Booking.findById(bookingId);
+  const booking = await Booking.findById(bookingId).populate("carId")
   if (!booking) {
     return res.status(404).json({ success: false, message: "Booking not found" });
   }
@@ -162,6 +166,21 @@ export const deleteBookingByuser = asyncHandler(async (req, res, next) => {
 
 
 
+  export const getBookingsByUserId = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+  
+    // Find all bookings for the given userId
+    const bookings = await Booking.find({ userId }); // Assuming userId is a field in your Booking model
+  
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ success: false, message: "No bookings found for the provided User ID" });
+    }
+  
+    res.status(200).json({ success: true, data: bookings });
+  });
+
+
+
 //automatic complete
 
 
@@ -180,3 +199,10 @@ cron.schedule('0 0 * * *', async () => {
     console.error('Error updating bookings:', error);
   }
 });
+
+
+export const getAllBookings = asyncHandler(async (req, res, next) => {
+  
+  const bookings = await Booking.find().populate("carId")
+  res.json({ success: true, message: 'Booking list fetched', data: bookings });
+})

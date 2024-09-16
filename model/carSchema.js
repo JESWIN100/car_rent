@@ -64,6 +64,50 @@ const carSchema = new mongoose.Schema({
     type:String,
     required:true
     },
+    Category:{
+       type:String,
+       required:true,
+       enum: [
+        'Sedan',
+        'Luxury',
+        'SUV',
+        'Hybrid',
+        'Coupe',
+        'Convertible',
+        'Wagon',
+        'Pickup Truck',
+        'Minivan',
+        'Sports Car',
+        'Electric',
+        'Luxury SUV',
+        'Hybrid SUV',
+        "Hatchback",
+      ],
+    },
+    // MaxPower: {
+    //   type: Number,
+    //   required: true,
+    // },
+    BootSpace: {
+      type: Number,
+      required: true,
+    },
+    // CylinderNo: {
+    //   type: Number,
+    //   required: true,
+    // },
+    Torque: {
+      type: Number,
+      required: true,
+    },
+    FuelCapacity: {
+      type: Number,
+      required: true,
+    },
+    EngineCC:{
+      type:Number,
+      required:true
+    },
 
 }, {
   timestamps: true,

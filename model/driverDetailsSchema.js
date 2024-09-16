@@ -41,9 +41,10 @@ const driverSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Licence number is required'],
         trim: true,
-        unique: true,
+        // unique: true,
         match: [/^[A-Z0-9-]{6,15}$/, 'Licence number must be alphanumeric and between 6 to 15 characters']
     },
+    lockUntil: { type: Date, default: null },
 }, {
     timestamps: true,
 });

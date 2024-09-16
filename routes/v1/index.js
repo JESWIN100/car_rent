@@ -8,7 +8,8 @@ import whislist from './whishllistRoute.js'
 import Payment from './paymentRoute.js'
 import Location from './locationRoute.js'
 import Driver from './driverRoute.js'
-
+import Contact from './contactRoute.js'
+import Nodemailer from './nodemailerRoute.js'
 
 const v1Router=express.Router();
 
@@ -21,7 +22,8 @@ v1Router.use("/Whishlist",whislist)
 v1Router.use("/payment",Payment)
 v1Router.use("/location",Location)
 v1Router.use("/driver",Driver)
-
+v1Router.use("/contact",Contact)
+v1Router.use("/nodemailer",Nodemailer)
 
 
 

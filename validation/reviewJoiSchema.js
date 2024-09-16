@@ -20,4 +20,5 @@ export const reviewSchema = Joi.object({
     'string.empty': 'Review text is required',
     'any.required': 'Review text is required',
   }),
+  // averageRating:Joi.string().required(),
 });

@@ -28,7 +28,7 @@ export const createCar = asyncHandler(async (req, res, next) => {
         const { error } = createCarsValidation(req.body);
         if (error) return res.status(400).json({ success: false, message: error.details[0].message });
 
-        const { description,brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability } = req.body;
+        const { description,brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability,Category,EngineCC,MaxPower,BootSpace,CylinderNo,Torque,FuelCapacity } = req.body;
 
         
 
@@ -44,7 +44,7 @@ export const createCar = asyncHandler(async (req, res, next) => {
         // Upload an image
         const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
 
-        const newCar = new Car({description, brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability });
+        const newCar = new Car({description,brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability,Category,EngineCC,MaxPower,BootSpace,CylinderNo,Torque,FuelCapacity });
         if (uploadResult?.url) {
             newCar.image = uploadResult.url;
         }

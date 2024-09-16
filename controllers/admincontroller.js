@@ -12,6 +12,8 @@ import { createCarsValidation } from "../validation/carJoiValidation.js";
 import bookingSchema from "../validation/bookingJoiValidation.js";
 import { cloudinaryInstance } from "../config/cloudinaryConfig.js";
 import { Driver } from "../model/driverDetailsSchema.js";
+import { Contact } from "../model/contactModel.js";
+import { Payment } from "../model/paymetSchema.js";
 
 export const AdminCreate = asyncHandler(async (req, res, next) => {
    
@@ -205,7 +207,7 @@ export const adminCreateCar = asyncHandler(async (req, res, next) => {
     const { error } = createCarsValidation(req.body);
     if (error) return res.status(400).json({ success: false, message: error.details[0].message });
 
-    const { description, brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability } = req.body;
+    const { description,brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability,Category,EngineCC,MaxPower,BootSpace,CylinderNo,Torque,FuelCapacity } = req.body;
 
     if (!req.file) {
         return res.status(400).json({ success: false, message: "Please upload an image" });
@@ -219,7 +221,7 @@ export const adminCreateCar = asyncHandler(async (req, res, next) => {
     // Upload an image
     const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "car" });
 
-    const newCar = new Car({description, brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability });
+    const newCar = new Car({description,brand, model, year, pricePerDay, capacity, transmission, fuelType, mileage, color, registrationNumber, availability,Category,EngineCC,MaxPower,BootSpace,CylinderNo,Torque,FuelCapacity });
     if (uploadResult?.url) {
         newCar.image = uploadResult.url;
     }
@@ -332,7 +334,7 @@ export const getTotalCars = async (req, res) => {
 // Booking Management Routes
 export const getAllBookings = asyncHandler(async (req, res, next) => {
   
-    const bookings = await Booking.find().populate("carId")
+    const bookings = await Booking.find().populate("carId").populate("userId")
     res.json({ success: true, message: 'Booking list fetched', data: bookings });
 })
 export const getBookingId = asyncHandler(async (req, res, next) => {
@@ -378,7 +380,7 @@ export const BookingDelete = asyncHandler(async (req, res, next) => {
     export const confirmBooking = asyncHandler(async (req, res, next) => {
         const { bookingId } = req.params;
       
-        const booking = await Booking.findById(bookingId);
+        const booking = await Booking.findById(bookingId).populate("carId").populate("userId")
         if (!booking) {
           return res.status(404).json({ success: false, message: "Booking not found" });
         }
@@ -392,6 +394,24 @@ export const BookingDelete = asyncHandler(async (req, res, next) => {
       });
 
 
+      export const cancelAdminBooking = asyncHandler(async (req, res, next) => {
+        const { bookingId } = req.params;
+      
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+          return res.status(404).json({ success: false, message: "Booking not found" });
+        }
+      
+        booking.status = 'Cancelled';
+        booking.cancelledAt = new Date();
+      
+        await booking.save();
+      
+        res.status(200).json({ success: true, message: "Booking cancelled", data: booking });
+      });
+
+
+
       export const getTotalBooking = async (req, res) => {
         try {
           const totalCars = await Booking.countDocuments(); // Counts total cars in the collection
@@ -402,7 +422,19 @@ export const BookingDelete = asyncHandler(async (req, res, next) => {
       };
       
 
-
+      export const getBookingByuserIdssss = asyncHandler(async (req, res) => {
+        const { userId } = req.params;
+      
+        // Find all bookings for the given userId
+        const bookings = await Booking.find({ userId }); // Assuming userId is a field in your Booking model
+      
+        if (!bookings || bookings.length === 0) {
+          return res.status(404).json({ success: false, message: "No bookings found for the provided User ID" });
+        }
+      
+        res.status(200).json({ success: true, data: bookings });
+      });
+    
 
 // Review Management Routes
 
@@ -483,3 +515,42 @@ export const getTotalReview = async (req, res) => {
     }
   };
   
+
+  ///Contact
+
+
+  export const getContacts = asyncHandler(async (req, res) => {
+    const contacts = await Contact.find().populate('userId');
+
+    if (!contacts || contacts.length === 0) {
+        return res.status(404).json({ success: false, message: "No contacts found" });
+    }
+
+    res.status(200).json({
+        success: true,
+        data: contacts,
+    });
+});
+
+
+
+//payment
+
+
+export const getAllAdminPayments = asyncHandler(async (req, res, next) => {
+    try {
+        // Retrieve all payment documents from MongoDB
+        const payments = await Payment.find();
+
+        // Check if there are any payments
+        if (payments.length === 0) {
+            return res.status(404).json({ success: false, message: 'No payments found' });
+        }
+
+        // Respond with all payment details
+        res.status(200).json({ success: true, data: payments });
+    } catch (error) {
+        // Pass any unexpected errors to error-handling middleware
+        next(error);
+    }
+});

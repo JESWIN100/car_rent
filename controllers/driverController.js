@@ -4,14 +4,36 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 export const createDriver = asyncHandler(async (req, res, next) => {
-    const {  firstName, lastName, driverAge, mobileNumber, licenceNumber } = req.body;
+    const { firstName, lastName, driverAge, mobileNumber, licenceNumber } = req.body;
 
+    const currentTime = new Date();
+
+    // Find a driver with the same license number
     const foundDriver = await Driver.findOne({ licenceNumber });
+
     if (foundDriver) {
+        // Check if the license number is locked and whether the lock has expired
+        if (foundDriver.lockUntil && foundDriver.lockUntil > currentTime) {
+            return res.status(400).json({ success: false, message: "Driver is temporarily locked for booking, try again later." });
+        }
+
+        // If the driver exists but lock has expired, proceed with booking and reset lock
+        foundDriver.lockUntil = new Date(Date.now() + 10 * 1000); // 10 seconds lock
+        await foundDriver.save();
+
         return res.status(400).json({ success: false, message: "Driver with this license number already exists" });
     }
 
-    const newDriver = new Driver({ firstName, lastName, driverAge, mobileNumber, licenceNumber });
+    // Create a new driver and set a temporary lock on the license number
+    const newDriver = new Driver({
+        firstName,
+        lastName,
+        driverAge,
+        mobileNumber,
+        licenceNumber,
+        lockUntil: new Date(Date.now() + 10 * 1000) // Lock for 10 seconds
+    });
+
     await newDriver.save();
 
     res.status(201).json({ success: true, message: "Driver created successfully", data: newDriver });

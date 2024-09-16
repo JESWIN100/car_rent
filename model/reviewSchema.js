@@ -26,6 +26,7 @@ const reviewSchema = new mongoose.Schema({
         minlength: [15, 'Review must be at least 15 characters long'],
         maxlength: [200, 'Review cannot exceed 200 characters'],
     },
+    // averageRating: { type: Number, default: 0 },
 }, {
     timestamps: true,
 });

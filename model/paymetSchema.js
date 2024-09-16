@@ -1,49 +1,33 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-    
-    booking: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Booking',
+    sessionId: {
+        type: String,
         required: true,
     },
-    amount: {
+    carDetails: {
+        carId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Car',
+            required: true,
+        },
+        brand: String,
+        model: String,
+        availability: String,
+    },
+    totalAmount: {
         type: Number,
         required: true,
     },
-    paymentMethod: {
+    paymentStatus: {
         type: String,
-        enum: ['Credit Card', 'Debit Card', 'PayPal', 'Net Banking'],
-        required: true,
+        default: 'pending', // payment status can be 'pending', 'paid', 'failed'
     },
-    transactionId: {
-        type: String,
-        unique: true,
-        required: true,
-    },
-    currency: {
-        type: String,
-        default: 'IND',
-    },
-    paymentDate: {
+    confirmedAt: { // Added field to track payment confirmation date
         type: Date,
-        default: Date.now,
-    },
-    status: {
-        type: String,
-        enum: ['Success', 'Failed', 'Pending'],
-        default: 'Pending',
-    },
-    description: {
-        type: String,
-    },
-    receiptUrl: {
-        type: String,
     },
 }, {
     timestamps: true,
 });
-
-paymentSchema.index({ booking: 1 });
 
 export const Payment = mongoose.model("Payment", paymentSchema);

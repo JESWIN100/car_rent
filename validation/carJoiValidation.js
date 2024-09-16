@@ -14,7 +14,31 @@ export const createCarsValidation = (data) => {
         registrationNumber: Joi.string().required(),
         availability: Joi.boolean().required(),
         review:Joi.string(),
-        description:Joi.string().required()
+        description:Joi.string().required(),
+        Category: Joi.string()
+        .valid(
+          'Sedan',
+          'Luxury',
+          'SUV',
+          'Hybrid',
+          'Coupe',
+          'Convertible',
+          'Wagon',
+          'Pickup Truck',
+          'Minivan',
+          'Sports Car',
+          'Electric',
+          'Luxury SUV',
+          'Hybrid SUV',
+          "Hatchback",
+        )
+        .required(),
+        EngineCC: Joi.number().positive().required(),
+//   MaxPower: Joi.number().positive().required(),
+  BootSpace: Joi.number().positive().required(),
+//   CylinderNo: Joi.number().integer().positive().required(),
+  Torque: Joi.number().positive().required(),
+  FuelCapacity: Joi.number().positive().required(),
     });
 
     return schema.validate(data);

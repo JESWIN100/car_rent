@@ -1,6 +1,6 @@
 import express from 'express';
 import { validateReviewToken } from '../../middlewares/authReviewMiddleWare.js';
-import { createReview, deleteCarReview, getCarReview, getCarReviewById, getReviewById, updateCarReview } from '../../controllers/reviewController.js';
+import { createReview, deleteCarReview, getAverage, getCarReview, getCarReviewById, getReviewById, updateCarReview } from '../../controllers/reviewController.js';
 import { authUser } from '../../middlewares/userAuth.js';
 
 
@@ -15,6 +15,7 @@ router.put("/updateCarReview/:id",authUser,updateCarReview)
 router.delete("/delteReview/:id",authUser,deleteCarReview)
 
 router.get("/getReviewssById/:id",authUser,getReviewById)
+router.get("/average-rating/:carId",authUser,getAverage)
 
 
 export default router;
