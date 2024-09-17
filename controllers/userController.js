@@ -26,7 +26,7 @@ export const userCreate = asyncHandler(async (req, res, next) => {
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     // Default image URL
-    // let imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&s"; 
+    let imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&s"; 
 
     // Check if an image was uploaded
     if (req.file) {
