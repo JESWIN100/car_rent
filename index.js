@@ -15,20 +15,11 @@ const port = process.env.PORT
 // Connect to the database
 connectDB();
 
-// app.use(cors({
-//     origin: "https://car-rental-app-frontent-jeswins-projects-f40474fd.vercel.app", 
-//     credentials: true, 
+app.use(cors({
+    origin: "https://car-rental-app-frontent-jeswins-projects-f40474fd.vercel.app", 
+    credentials: true, 
    
-//   }));
-
-
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://car-rental-app-frontent-jeswins-projects-f40474fd.vercel.app'); // Replace with your frontend URL
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    next();
-});
+  }));
 
 
   
