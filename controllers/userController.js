@@ -86,7 +86,7 @@ export const userLogin=asyncHandler(async(req,res,next)=>{
     secure: true,
     httpOnly: true,
 };
- res.cookie('token',token,{sameSite:"None",secure:true})
+ res.cookie('token',token,cookieOptions)
   res.json({success:true,message:'user logged in successfully'})
 
 
