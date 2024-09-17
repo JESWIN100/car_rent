@@ -16,12 +16,12 @@ const port = process.env.PORT
 connectDB();
 
 app.use(cors({
-    origin: "https://car-rental-app-frontent-jeswins-projects-f40474fd.vercel.app", 
+    origin: "*", 
     credentials: true, 
    
   }));
   
-
+//https://car-rental-app-frontent-jeswins-projects-f40474fd.vercel.app
 app.use(bodyParser.json()); // Parse JSON bodies
 
 
