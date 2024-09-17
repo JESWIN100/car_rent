@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { Payment } from '../model/paymetSchema.js';
 import { Booking } from '../model/bookingSchema.js';
-const stripe = new Stripe(process.env.STRIPE_PRIVATE_API_KEY);
+const stripe = new Stripe(process.env.Stripe_private_Api_Key);
 
 export const MakePayment = asyncHandler(async (req, res, next) => {
     const { carDetails, totalAmount } = req.body;
