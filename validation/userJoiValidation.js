@@ -7,6 +7,7 @@ export const validateUserRegistration = (data) => {
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         phone: Joi.string().pattern(/^[0-9]{10}$/).required(),
+        
     });
     return schema.validate(data);
 };

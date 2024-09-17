@@ -3,40 +3,59 @@ import bcrypt  from 'bcrypt'
 import { generateUserToken } from '../utils/generateToken.js';
 import { validateUserLogin, validateUserRegistration } from '../validation/userJoiValidation.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { cloudinaryInstance } from '../config/cloudinaryConfig.js';
 
 
-export const userCreate=asyncHandler(async(req,res,next)=>{
-
-
-    //validation fro joi
-    const {error}=await validateUserRegistration(req.body);
+export const userCreate = asyncHandler(async (req, res, next) => {
+    // Validate input using Joi
+    const { error } = await validateUserRegistration(req.body);
     if (error) {
         return res.status(402).json({ success: false, message: error.details[0].message });
     }
 
-        const {name,email,password,phone}=req.body;
-      
-        const userExit=await User.findOne({email})
-        if(userExit){
-            return res.status(400).json({ success: false,message:'user already exist'})
-            }
+    const { name, email, password, phone } = req.body;
 
-//hasing
-        const salt=10
-        const hashedPassword=bcrypt.hashSync(password,salt)
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+        return res.status(400).json({ success: false, message: 'User already exists' });
+    }
 
-const newUser=new User({name,email,password:hashedPassword,phone})
-await newUser.save()
+    // Hash the password
+    const salt = 10;
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
+    // Default image URL
+    let imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&s"; 
 
-//token
+    // Check if an image was uploaded
+    if (req.file) {
+        const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "profile" });
+        if (uploadResult?.url) {
+            imageUrl = uploadResult.url; 
+        }
+    }
 
-const token=generateUserToken(email)
+    // Create new user
+    const newUser = new User({
+        name,
+        email,
+        password: hashedPassword,
+        phone,
+        image: imageUrl 
+    });
 
-res.cookie('token',token)
+    await newUser.save();
 
-            res.json({ success: true, message: "user created successfully" });
-    } )
+    // Generate token
+    const token = generateUserToken(email);
+
+    // Set cookie
+    res.cookie('token', token);
+
+    // Respond with success
+    res.json({ success: true, message: "User created successfully" });
+});
 
 
 export const userLogin=asyncHandler(async(req,res,next)=>{
@@ -86,12 +105,6 @@ export const userLogin=asyncHandler(async(req,res,next)=>{
         } )
          
 
-      
-        
-
-
-
-
 
 
   export const checkUser=asyncHandler(async(req,res,next)=>{
@@ -114,3 +127,28 @@ export const userLogout=asyncHandler(async(req,res,next)=>{
                  
             
                 } )
+
+
+
+
+                export const updateUser = asyncHandler(async (req, res, next) => {
+                    const { id } = req.params;
+                
+                    // Handle image update if a new file is provided
+                    let updatedData = { ...req.body };
+                    if (req.file) {
+                        const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path, { folder: "profile" });
+                        if (uploadResult?.url) {
+                            updatedData.image = uploadResult.url;
+                        }
+                    }
+                
+                    
+                    const updatedUser = await User.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+                
+                    if (!updatedUser) {
+                        return res.status(404).json({ success: false, message: "Car not found" });
+                    }
+                
+                    res.json({ success: true, message: 'Car updated successfully!', data: updatedUser });
+                });
