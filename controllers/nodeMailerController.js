@@ -15,7 +15,7 @@ export const Createmessage = async (req, res) => {
     const { to, subject, text, html } = req.body;
 
     const mailOptions = {
-        from: `jeswinjoseph654@gmail.com`, 
+        from: 'jeswinjoseph654@gmail.com', 
         to: to,  
         subject: subject,
         text: text,
