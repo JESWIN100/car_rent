@@ -18,12 +18,13 @@ connectDB();
 // Middleware
 app.use(cors({
     origin: "https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app",
-    //https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app
-    credentials:true,
+    credentials: true,
+    
+   
 })); // Enable CORS
 app.use(bodyParser.json()); // Parse JSON bodies
 
-
+//https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app
 app.use(logger('dev'));
 // Default route
 
