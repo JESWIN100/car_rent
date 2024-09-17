@@ -3,7 +3,7 @@ import {  confirmPayment, getAllPayments, getPaymentsByCarId, MakePayment } from
 import { authUser } from '../../middlewares/userAuth.js';
 const router = express.Router();
 
- router.post("/create-checkout-session",authUser, MakePayment); // Added authUser middleware
+ router.post("/create-checkout-session", MakePayment); // Added authUser middleware
  router.put('/Adminbooking/:bookingId/confirm',authUser, confirmPayment);
  router.get('/payments',authUser, getAllPayments); 
  router.get('/payments/car/:carId',authUser, getPaymentsByCarId);
