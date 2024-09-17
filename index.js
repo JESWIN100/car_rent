@@ -15,13 +15,13 @@ const port = process.env.PORT
 // Connect to the database
 connectDB();
 
-// Middleware
 app.use(cors({
-    origin: "https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app",
-    credentials: true,
-    
-   
-})); // Enable CORS
+    origin: "https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app", // Specify frontend origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
+    credentials: true, // Enable credentials (cookies, tokens, etc.)
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
+  }));
+
 app.use(bodyParser.json()); // Parse JSON bodies
 
 //https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app
