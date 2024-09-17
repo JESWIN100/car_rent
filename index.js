@@ -16,7 +16,7 @@ const port = process.env.PORT
 connectDB();
 
 app.use(cors({
-    origin: "https://car-rental-frontent-np7hdiyvj-jeswins-projects-f40474fd.vercel.app", 
+    origin: "https://car-rental-frontent-jeswins-projects-f40474fd.vercel.app/", 
     credentials: true, 
    
   }));
