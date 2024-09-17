@@ -17,10 +17,17 @@ connectDB();
 
 app.use(cors({
     origin: "https://car-rental-frontent-ten.vercel.app", 
-    
     credentials: true, 
-    
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "X-Requested-With",
+    ],
   }));
+  
 
 app.use(bodyParser.json()); // Parse JSON bodies
 
