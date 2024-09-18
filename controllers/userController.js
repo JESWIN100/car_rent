@@ -147,8 +147,8 @@ export const userLogout=asyncHandler(async(req,res,next)=>{
                     const updatedUser = await User.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
                 
                     if (!updatedUser) {
-                        return res.status(404).json({ success: false, message: "Car not found" });
+                        return res.status(404).json({ success: false, message: "User not found" });
                     }
                 
-                    res.json({ success: true, message: 'Car updated successfully!', data: updatedUser });
+                    res.json({ success: true, message: 'User updated successfully!', data: updatedUser });
                 });
